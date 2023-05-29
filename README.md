@@ -2,7 +2,7 @@
 The very first project of 42 Paris. (Re)Creating some functions that will be useful later on for the different projects
 
 ## How to create libft.a library
-Go to the project root's folder , open a terminal and use
+Open a terminal and go to the project root's folder, then 
 ```bash
   make
 ```
