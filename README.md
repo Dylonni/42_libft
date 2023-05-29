@@ -10,4 +10,4 @@ To make bonus .o files
 ```bash
   make bonus
 ```
-Note that this project is up to date with GNL and ft_printf, which are functions that must be created on their own project !
+Note that this project is up to date with GNL and ft_printf, which are functions that must be created on their own project.
