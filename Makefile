@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			=   src/ft_isalnum.c \
+SRC_MAIN			=   src/ft_isalnum.c \
 					src/ft_isprint.c \
 					src/ft_memcmp.c \
 					src/ft_putchar_fd.c \
@@ -52,6 +52,8 @@ SRCS			=   src/ft_isalnum.c \
 					src/ft_printf.c \
 					src/get_next_line.c
 
+SRCS			= ${SRC_MAIN}
+
 BONUS			= 	bonus/ft_lstadd_front.c \
 					bonus/ft_lstadd_back.c \
 					bonus/ft_lstlast.c \
@@ -61,33 +63,63 @@ BONUS			= 	bonus/ft_lstadd_front.c \
 					bonus/ft_lstclear.c \
 					bonus/ft_lstiter.c \
 					bonus/ft_lstmap.c
+					
+SRCS_BONUS		= ${BONUS}
 
-OBJS			= $(SRCS:.c=.o)
-BONUS_OBJS		= $(BONUS:.c=.o)
+OBJ_DIR			= objs
+BONUS_OBJ_DIR		= bonus_objs
+OBJS			= $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+BONUS_OBJS		= $(patsubst bonus/%.c,$(BONUS_OBJ_DIR)/%.o,$(SRCS_BONUS))
 
-CC			    = gcc
-RM				= rm -f
+CC			= gcc
+RM			= rm -f
 CFLAGS			= -Wall -Werror -Wextra -I.
 
-NAME		    = libft.a
+NAME		    	= libft.a
 
-all:			$(NAME)
+all: $(OBJ_DIR) $(OBJS) $(NAME)
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+	
+$(BONUS_OBJ_DIR):
+	@mkdir -p $(BONUS_OBJ_DIR)
+
+$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+	@mkdir -p $(@D)
+	@printf '\033[A\033[19C'"⌛ [\e[1;96mCompiling\033[0m]\033[35m $<\033[0m \n"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(BONUS_OBJ_DIR)/%.o: bonus/%.c | $(BONUS_OBJ_DIR)
+	@mkdir -p $(@D)
+	@printf '\033[A\033[19C'"⌛ [\e[1;96mCompiling BONUS\033[0m]\033[35m $<\033[0m \n"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME):		$(OBJS)
-				ar rcs $(NAME) $(OBJS)
+			@ar rcs $(NAME) $(OBJS)
+			@printf '\033[A\033[20C'"\033[32;1m  ✅ Project has compiled successfully!          \033[0m"
+			@printf "\n\n    [🏳️ FLAGS: \033[0;35m$(CFLAGS)\033[0m]"
+			@echo "\033[32;1m\n 📚 Library \e[7m$(NAME)\e[27m has been created in: \n    └─ 📂 \033[4;36m ~ $(PWD)\033[0m"
 
-bonus:          $(OBJS) $(BONUS_OBJS)
-				ar rcs $(NAME) $(OBJS) $(BONUS_OBJS)
+bonus:			$(OBJS) $(BONUS_OBJS)
+			@ar rcs $(NAME) $(OBJS) $(BONUS_OBJS)
+			@printf '\033[A\033[20C'"\033[32;1m  ✅ Project has compiled successfully!          \033[0m"
+			@printf "\n\n    [🏳️ FLAGS: \033[0;35m$(CFLAGS)\033[0m]"
+			@echo "\033[32;1m\n 📚 Library \e[7m$(NAME)\e[27m has been created in: \n    └─ 📂 \033[4;36m ~ $(PWD)\033[0m"
 
-clean:				
-				$(RM) $(OBJS) $(BONUS_OBJS)
+clean:
+	$(RM) -r $(OBJ_DIR) $(BONUS_OBJ_DIR)
 
-fclean:			clean
-				$(RM) $(NAME)
+fclean:
+	@echo "\033[1;93m\n                        [Cleaning directories with \033[0;96mfclean\033[1;93m]\n\033[0m"
+	@make clean
+	$(RM) $(NAME) $(NAME_BONUS)
 
-re:				fclean $(NAME)
+re:	
+	@make fclean
+	@echo "\033[1;93m\n                            [Calling \033[0;96mmake all\033[1;93m rule]\n\033[0m"
+	@make -s all
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@		
+		
 
-.PHONY:			all clean fclean re bonus
+.PHONY:	all clean fclean re bonus
