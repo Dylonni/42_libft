@@ -13,21 +13,21 @@
 #include "../libft.h"
 
 /*Compares two strings each character for n bytes.
- Returns the difference of the character if found , else returns 0*/
+ Returns the difference of the characters if s1 =/= s2 , else returns 0*/
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
 
 	i = 0;
-	if (i == n)
+	if (!s1 || !s2)
 		return (0);
-	while ((s1[i] && s2[i]) && i < n - 1)
+	while (i < n && (*s1 || *s2))
 	{
-		if (s1[i] > s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		if (s2[i] > s1[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		if ((unsigned char) *s1 != (unsigned char) *s2)
+			return ((unsigned char) *s1 - (unsigned char) *s2);
+		s1++;
+		s2++;
 		i++;
 	}
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	return (0);
 }
